@@ -33,6 +33,15 @@ public class SmartConnect {
 	private String refreshToken;
 	private Routes routes = new Routes();
 	private String userId;
+
+	public SmartAPIRequestHandler getSmartAPIRequestHandler() {
+		return smartAPIRequestHandler;
+	}
+
+	public void setSmartAPIRequestHandler(SmartAPIRequestHandler smartAPIRequestHandler) {
+		this.smartAPIRequestHandler = smartAPIRequestHandler;
+	}
+
 	private SmartAPIRequestHandler smartAPIRequestHandler;
 
 	public SmartConnect() {
@@ -726,6 +735,18 @@ public class SmartConnect {
 			JSONObject response = smartAPIRequestHandler.postRequest(this.apiKey, url, params, accessToken);
 			log.info("response : {}",response);
 			return response.getString("data");
+		} catch (Exception | SmartAPIException e) {
+			log.error(e.getMessage());
+			return null;
+		}
+	}
+
+	public JSONArray candleDataAsJSONArray(JSONObject params) {
+		try {
+			String url = routes.get("api.candle.data");
+			JSONObject response = smartAPIRequestHandler.postRequest(this.apiKey, url, params, accessToken);
+			log.info("response : {}",response);
+			return response.getJSONArray("data");
 		} catch (Exception | SmartAPIException e) {
 			log.error(e.getMessage());
 			return null;
